@@ -3,7 +3,7 @@
 # VERSION of Bitcoin Core to be build
 #   NOTE: Unlike our other images this one is NOT prefixed with `v`,
 #           as many things (like download URLs) use this form instead.
-ARG VERSION=22.0.knots20211108.citadel.2
+ARG VERSION=23.0.knots20220529
 
 # CPU architecture to build binaries for
 ARG ARCH
@@ -17,7 +17,7 @@ ARG DIR=/data
 
 # Choose where to get bitcoind sources from, options: release, git
 #   NOTE: Only `SOURCE=git` can be used for RC releases
-ARG SOURCE=git
+ARG SOURCE=release
 
 # Choose where to get BerkeleyDB from, options: prebuilt, compile
 #   NOTE: When compiled here total execution time exceeds allowed CI limits, so pre-built one is used by default
@@ -40,7 +40,7 @@ FROM preparer-base AS preparer-release
 ARG VERSION
 
 # Add release
-ADD https://github.com/runcitadel/bitcoin/archive/refs/tags/v$VERSION.tar.gz ./
+ADD https://github.com/bitcoinknots/bitcoin/archive/refs/tags/v$VERSION.tar.gz ./
 
 # Extract
 RUN tar -xzf "v$VERSION.tar.gz" && \
@@ -60,11 +60,11 @@ ARG VERSION
 RUN apk add --no-cache git
 
 # Fetch the source code at a specific TAG
-RUN git clone  -b "v$VERSION"  --depth=1  https://github.com/runcitadel/bitcoin.git  "/bitcoin-$VERSION/"
+RUN git clone  -b "v$VERSION"  --depth=1  https://github.com/bitcoinknots/bitcoin.git  "/bitcoin-$VERSION/"
 
 # Verify tag, and copy source code to predetermined location on success
-#RUN cd "/bitcoin-$VERSION/" && \
-#    git verify-tag "bitcoin-$VERSION"
+RUN cd "/bitcoin-$VERSION/" && \
+    git verify-tag "bitcoin-$VERSION"
 
 
 
